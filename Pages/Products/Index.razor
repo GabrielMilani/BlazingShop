@@ -1,0 +1,46 @@
+﻿@page "/products"
+@using BlazingShop.Data
+@using System.Globalization
+@inject AppDbContext context
+
+<h1>Products</h1>
+<a href="products/create" class="btn btn-primary">
+    <i class="oi oi-plus"></i> CREATE
+</a>
+
+<table class="table">
+    <thead>
+    <tr>
+        <td>#</td>
+        <td>Title</td>
+        <td>Price</td>
+        <td></td>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Products)
+        {
+            <tr>
+                <td>@product.Id</td>
+                <td>@product.Title</td>
+                <td>@product.Price.ToString("C", new CultureInfo("pt-BR"))</td>
+                <td>
+                    <div>
+                        <a href="products/edit/@product.Id">Alterar</a>
+                        <a href="products/delete/@product.Id">Deletar</a>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@code {
+    List<Product> Products = new();
+    protected override async Task OnInitializedAsync()
+    {
+        Products = await context.Products.AsNoTracking()
+                                         .ToListAsync();
+    }
+}
